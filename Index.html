@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brand:#4d8f7f; --brand-d:#3c7365; --grad1:#5a9e8c; --grad2:#6fb0a0;
+      --ink:#2c3a34; --muted:#6b7771; --bg:#eef1ec; --card:#f9faf6; --line:#e1e7de;
+      --ok:#4f9a6a; --okbg:#e9f2ea; --bad:#c56b5c; --badbg:#f5e9e5;
+      --easy:#4f9a6a; --mid:#c08a3e; --hard:#c56b5c;
+      --pill:#e7efe9; --pill-ink:#3f7669;
+      --shadow:0 6px 22px rgba(44,58,52,.08); --shadow-sm:0 2px 8px rgba(44,58,52,.06);
+    }
+    *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+    html,body{margin:0}
+    body{
+      background:var(--bg); color:var(--ink); line-height:1.55;
+      font-family:"Sarabun",-apple-system,"Segoe UI",sans-serif;
+      font-size:17px;
+    }
+    .app{max-width:1040px; margin:0 auto; padding:0 18px 70px;}
+
+    /* ---------- header ---------- */
+    .hero{
+      background:linear-gradient(135deg,var(--grad1),var(--grad2));
+      color:#fff; border-radius:0 0 26px 26px; padding:22px 20px 26px;
+      margin:0 -16px 18px; box-shadow:var(--shadow);
+    }
+    .hero-inner{max-width:1040px; margin:0 auto;}
+    .hero h1{font-size:22px; font-weight:800; margin:0 0 3px; letter-spacing:-.2px}
+    .hero p{margin:0; opacity:.92; font-size:14px}
+    .userchip{
+      display:inline-flex; align-items:center; gap:7px; margin-top:14px;
+      background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.28);
+      padding:6px 13px; border-radius:999px; font-size:13.5px; font-weight:500;
+      max-width:100%;
+    }
+    .userchip .dot{width:8px;height:8px;border-radius:50%;background:#c7ecd8;flex:0 0 auto}
+    .userchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    /* ---------- cards & sections ---------- */
+    .card{background:var(--card); border:1px solid var(--line); border-radius:20px;
+      padding:20px; box-shadow:var(--shadow-sm); margin-bottom:16px}
+    .sec{margin-bottom:20px}
+    .sec:last-child{margin-bottom:0}
+    .label{font-size:14px; font-weight:700; color:var(--muted); text-transform:none;
+      margin:0 0 10px; display:flex; align-items:center; gap:6px}
+
+    /* ---------- segmented (ระดับชั้น) ---------- */
+    .seg{display:flex; gap:8px; background:#f1f4fb; padding:5px; border-radius:14px}
+    .seg button{flex:1; border:none; background:transparent; padding:13px; border-radius:10px;
+      font-family:inherit; font-size:17px; font-weight:700; color:var(--muted); cursor:pointer;
+      transition:.18s}
+    .seg button.on{background:#fff; color:var(--brand); box-shadow:var(--shadow-sm)}
+
+    /* ---------- subject grid ---------- */
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+    .subj{border:2px solid var(--line); background:#fff; border-radius:16px; padding:14px 12px;
+      cursor:pointer; text-align:left; transition:.16s; display:flex; flex-direction:column; gap:3px}
+    .subj:hover{border-color:#c4d0f5; transform:translateY(-1px)}
+    .subj.on{border-color:var(--brand); background:#f5f8ff; box-shadow:var(--shadow-sm)}
+    .subj .emo{font-size:26px}
+    .subj .nm{font-weight:700; font-size:16.5px}
+    .subj .ct{font-size:13.5px; color:var(--muted)}
+
+    /* ---------- chips (จำนวน/เวลา/ความยาก) ---------- */
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{border:2px solid var(--line); background:#fff; color:var(--ink); border-radius:999px;
+      padding:10px 17px; font-family:inherit; font-size:15.5px; font-weight:600; cursor:pointer; transition:.15s}
+    .chip:hover{border-color:#c4d0f5}
+    .chip.on{border-color:var(--brand); background:var(--brand); color:#fff}
+
+    /* ---------- switch (เฉลยทันที / cooldown) ---------- */
+    .switch{display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:#f7f9fe; border:1px solid var(--line); border-radius:14px; padding:13px 15px}
+    .switch .t{font-weight:600; font-size:15px}
+    .switch .s{font-size:12.5px; color:var(--muted)}
+    .tog{width:52px; height:30px; border-radius:999px; background:#cbd5e1; position:relative;
+      cursor:pointer; transition:.2s; flex:0 0 auto; border:none}
+    .tog::after{content:""; position:absolute; top:3px; left:3px; width:24px; height:24px;
+      border-radius:50%; background:#fff; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.2)}
+    .tog.on{background:var(--brand)} .tog.on::after{left:25px}
+
+    /* ---------- buttons ---------- */
+    .btn{width:100%; border:none; border-radius:14px; padding:15px; font-family:inherit;
+      font-size:17px; font-weight:800; color:#fff; cursor:pointer; transition:.16s;
+      background:linear-gradient(135deg,var(--grad1),var(--grad2)); box-shadow:0 6px 16px rgba(77,143,127,.30)}
+    .btn:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(77,143,127,.38)}
+    .btn:active{transform:translateY(0)}
+    .btn:disabled{opacity:.45; cursor:not-allowed; transform:none; box-shadow:none}
+    .btn.ghost{background:#eef2fb; color:var(--brand); box-shadow:none}
+    .btn.ghost:hover{background:#e3e9f7}
+    .btn-row{display:flex; gap:10px}
+    .btn-row .btn{flex:1}
+
+    /* ---------- exam ---------- */
+    .exambar{position:sticky; top:0; z-index:5; background:var(--bg); padding:10px 0 8px;
+      display:flex; align-items:center; gap:12px}
+    .prog{flex:1; height:9px; background:#dde5f3; border-radius:99px; overflow:hidden}
+    .prog>i{display:block; height:100%; width:0;
+      background:linear-gradient(90deg,var(--grad1),var(--grad2)); transition:.3s}
+    .timer{font-weight:800; font-variant-numeric:tabular-nums; color:var(--brand);
+      background:#fff; border:1px solid var(--line); border-radius:999px; padding:6px 13px; font-size:15px}
+    .timer.low{color:#fff; background:var(--bad); border-color:var(--bad); animation:pulse 1s infinite}
+    .timecard{display:flex; align-items:center; justify-content:space-between; gap:14px;
+      background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px 16px;
+      margin:0 0 12px; box-shadow:var(--shadow-sm)}
+    .timecard .tl{font-size:13px; font-weight:700; color:var(--muted)}
+    .timecard .tv{font-size:26px; font-weight:800; color:var(--brand); font-variant-numeric:tabular-nums}
+    .timecard.low{background:var(--bad); border-color:var(--bad); color:#fff; animation:pulse 1s infinite}
+    .timecard.low .tl,.timecard.low .tv{color:#fff}
+    @keyframes pulse{50%{opacity:.72}}
+    .qnum{font-size:13.5px; color:var(--muted); font-weight:600; margin-bottom:8px}
+    .qmeta{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px}
+    .tag{font-size:12px; font-weight:700; padding:3px 10px; border-radius:8px; background:var(--pill); color:var(--pill-ink)}
+    .tag.easy{background:var(--okbg); color:var(--easy)}
+    .tag.mid{background:#f4eede; color:var(--mid)}
+    .tag.hard{background:var(--badbg); color:var(--hard)}
+    .btn.small{padding:7px 14px;font-size:13px;width:auto;margin:2px 0 4px}
+    .moreExp{font-size:14px;line-height:1.7;color:#33413a;background:#fbf7ef;border-left:3px solid #d9a441;
+             border-radius:8px;padding:0;margin:6px 0;max-height:0;overflow:hidden;transition:all .25s;white-space:pre-wrap}
+    .moreExp.show{padding:11px 13px;max-height:1200px}
+    .weakwrap{background:#f4f8f5;border:1px solid #dbe7de;border-radius:14px;padding:14px 16px}
+    .weakwrap h3{margin:0 0 10px;font-size:15px;color:#2c5545}
+    .weakrow{display:flex;align-items:center;gap:10px;margin:7px 0}
+    .weakrow .name{flex:1;font-size:14px;color:#33413a}
+    .weakbar{height:9px;border-radius:5px;background:linear-gradient(90deg,#e8a87c,#d9776a);min-width:8px}
+    .weakrow .cnt{font-size:12.5px;color:#8a5a4e;font-weight:600;white-space:nowrap}
+    .weakempty{font-size:13.5px;color:#5f7268}
+    .qimg{width:100%; max-width:440px; display:block; margin: 4px 0;
+      border:1px solid var(--line); border-radius:14px; background:#fff}
+    .qimg.real{max-width:860px}
+    .img-loading{max-width:860px; margin:2px auto 16px; border:1px dashed var(--line); border-radius:14px;
+      background:#fff; color:var(--muted); padding:22px; text-align:center; font-weight:700}
+    .img-loading .spin{width:26px;height:26px;border-width:3px;margin-bottom:8px}
+    .qtext{font-size:19px; font-weight:600; margin:4px 0 16px; white-space:pre-wrap; line-height:1.55}
+    .opt{display:flex; align-items:center; gap:13px; width:100%; text-align:left; margin-bottom:11px;
+      background:#fff; border:2px solid var(--line); color:var(--ink); border-radius:14px;
+      padding:15px 16px; font-family:inherit; font-size:17px; font-weight:500; cursor:pointer; transition:.14s}
+    .opt:hover{border-color:#c4d0f5}
+    .opt .lab{flex:0 0 32px; height:32px; border-radius:50%; background:var(--pill); color:var(--pill-ink);
+      font-weight:800; display:flex; align-items:center; justify-content:center; font-size:15px}
+    .opt .tx{flex:1}
+    .opt.sel{border-color:var(--brand); background:#f4f7ff}
+    .opt.sel .lab{background:var(--brand); color:#fff}
+    .opt.correct{border-color:var(--ok); background:var(--okbg)}
+    .opt.correct .lab{background:var(--ok); color:#fff}
+    .opt.wrong{border-color:var(--bad); background:var(--badbg)}
+    .opt.wrong .lab{background:var(--bad); color:#fff}
+    .opt:disabled{cursor:default}
+    .explain{background:#f6f8fd; border-left:4px solid var(--brand); border-radius:10px;
+      padding:12px 14px; margin-top:8px; font-size:15px; color:#334155}
+    .explain b{color:var(--brand)}
+
+    .markdown-table { width:100%; border-collapse:collapse; margin:14px 0; font-size:15px; }
+    .markdown-table th, .markdown-table td { border:1px solid #cbd5e1; padding:8px 12px; text-align:left; }
+    .markdown-table th { background:#f1f5f9; font-weight:700; color:#1e293b; }
+
+    /* ---------- result ---------- */
+    .scorewrap{text-align:center; padding:6px 0 4px}
+    .ring{width:150px; height:150px; border-radius:50%; margin:6px auto 10px; display:flex;
+      align-items:center; justify-content:center; flex-direction:column; color:#fff;
+      background:conic-gradient(var(--brand) var(--pct,0%), #e2e8f0 0)}
+    .ring .in{width:118px; height:118px; border-radius:50%; background:#fff; color:var(--brand);
+      display:flex; flex-direction:column; align-items:center; justify-content:center}
+    .ring .in b{font-size:34px; font-weight:800; line-height:1}
+    .ring .in span{font-size:12.5px; color:var(--muted)}
+    .res-sub{font-size:16px; color:var(--muted)}
+    .review-q{border-top:1px dashed var(--line); padding-top:15px; margin-top:16px}
+
+    /* ---------- history ---------- */
+    .hist{width:100%; border-collapse:collapse; font-size:14px}
+    .hist th,.hist td{border-bottom:1px solid var(--line); padding:9px 6px; text-align:center}
+    .hist th{color:var(--muted); font-weight:700; font-size:12.5px}
+    .hbadge{font-weight:800}
+    .hist-filter{display:flex; align-items:center; gap:10px; margin:0 0 14px; flex-wrap:wrap}
+    .hist-filter label{font-size:13px; font-weight:700; color:var(--muted)}
+    .hist-filter select{font-family:inherit; font-size:14px; font-weight:600; color:var(--ink);
+      background:#fff; border:2px solid var(--line); border-radius:12px; padding:9px 12px; max-width:100%}
+    .selectbox{width:100%; font-family:inherit; font-size:16px; font-weight:600; color:var(--ink);
+      background:#fff; border:2px solid var(--line); border-radius:14px; padding:12px 14px}
+
+    .center{text-align:center}
+    .muted{color:var(--muted)}
+    .loading{text-align:center; color:var(--muted); padding:44px 0}
+    .spin{width:36px;height:36px;border:4px solid #dbe3f2;border-top-color:var(--brand);
+      border-radius:50%; margin:0 auto 14px; animation:sp 1s linear infinite}
+    @keyframes sp{to{transform:rotate(360deg)}}
+    .hide{display:none!important}
+
+    @media(min-width:720px){
+      body{font-size:18.5px}
+      .hero{padding:30px 30px 32px}
+      .hero h1{font-size:28px}
+      .card{padding:28px}
+      .qtext{font-size:21px}
+      .opt{font-size:18px}
+      .seg button{font-size:18px}
+      .chip{font-size:16px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>📝 ระบบสอบออนไลน์</h1>
+      <p>เตรียมสอบเข้า ม.1 / ม.4 · จภ. · วมว. · สาธิต มน.</p>
+      <div id="userchip" class="userchip hide"><span class="dot"></span><span id="email">—</span></div>
+    </div>
+  </div>
+
+  <!-- ===== โหลด ===== -->
+  <div id="s-loading" class="card loading"><div class="spin"></div>กำลังเตรียมระบบ...</div>
+
+  <!-- ===== ข้อผิดพลาด ===== -->
+  <div id="s-error" class="card hide center">
+    <div style="font-size:40px">😕</div>
+    <h2 style="margin:8px 0">เกิดข้อผิดพลาด</h2>
+    <p id="err-msg" class="muted"></p>
+    <button class="btn ghost" onclick="retryInit()">ลองใหม่</button>
+  </div>
+
+  <!-- ===== หน้าแรก: เลือกข้อสอบ ===== -->
+  <div id="s-home" class="hide">
+    <div class="card">
+      <div class="sec">
+        <div class="label">🎓 เลือกระดับชั้น</div>
+        <div id="levelSeg" class="seg"></div>
+      </div>
+      <div id="realPickSec" class="sec hide">
+        <div class="label">🗂 เลือกชุดข้อสอบจริง / Pretest</div>
+        <select id="realSetSelect" class="selectbox"></select>
+      </div>
+      <div id="subjectSec" class="sec">
+        <div class="label">📚 เลือกวิชา</div>
+        <div id="subjGrid" class="grid"></div>
+      </div>
+      <div id="countSec" class="sec">
+        <div class="label">🔢 จำนวนข้อ</div>
+        <div id="countChips" class="chips"></div>
+      </div>
+      <div id="timeSec" class="sec">
+        <div class="label">⏱ เวลา</div>
+        <div id="timeChips" class="chips"></div>
+      </div>
+      <div id="diffSec" class="sec">
+        <div class="label">🎯 ระดับความยาก</div>
+        <div id="diffChips" class="chips"></div>
+      </div>
+      <div id="shuffleQSec" class="sec">
+        <div class="switch">
+          <div>
+            <div class="t">🔀 สุ่มสลับลำดับข้อสอบ (ไม่เรียงข้อ)</div>
+            <div class="s">เปิด = สุ่มสลับข้อไม่เรียงข้อ 1..100 · ปิด = เรียงข้อตามลำดับต้นฉบับ</div>
+          </div>
+          <button id="togShuffleQ" class="tog on" onclick="toggleShuffleQ()"></button>
+        </div>
+      </div>
+      <div id="shuffleOptSec" class="sec">
+        <div class="switch">
+          <div>
+            <div class="t">🔀 สุ่มสลับตัวเลือกคำตอบ (ก ข ค ง)</div>
+            <div class="s">เปิด = สุ่มสลับตำแหน่ง ก ข ค ง ทุกครั้งเพื่อป้องกันการจำตำแหน่งคำตอบ</div>
+          </div>
+          <button id="togShuffleOpt" class="tog on" onclick="toggleShuffleOpt()"></button>
+        </div>
+      </div>
+      <div id="cooldownSec" class="sec">
+        <div class="switch">
+          <div>
+            <div class="t">🛡️ ห้ามสุ่มข้อสอบซ้ำใน 2 วัน (48 ชม.)</div>
+            <div class="s">เปิด = ป้องกันการสุ่มเจอข้อสอบที่เคยทำไปแล้วใน 48 ชม. ล่าสุด</div>
+          </div>
+          <button id="togCooldown" class="tog on" onclick="toggleCooldown()"></button>
+        </div>
+      </div>
+      <div id="answerSec" class="sec">
+        <div class="switch">
+          <div>
+            <div class="t">เฉลยทันทีหลังตอบ</div>
+            <div class="s">เปิด = โหมดฝึก (เห็นเฉลยทีละข้อ) · ปิด = โหมดสอบ (เฉลยตอนจบ)</div>
+          </div>
+          <button id="tog" class="tog on" onclick="toggleMode()"></button>
+        </div>
+      </div>
+      <button id="startBtn" class="btn" onclick="startSelectedExam()">เริ่มทำข้อสอบ</button>
+      <button class="btn ghost" style="margin-top:10px" onclick="startWeakExam()">
+        🩹 ซ่อมจุดอ่อน (ทำเฉพาะข้อที่เคยผิด)
+      </button>
+    </div>
+    <button class="btn ghost" onclick="showHistory()">📊 ดูสถิติย้อนหลัง</button>
+  </div>
+
+  <!-- ===== ทำข้อสอบ ===== -->
+  <div id="s-exam" class="hide">
+    <div class="exambar">
+      <div class="prog"><i id="progbar"></i></div>
+      <div id="timer" class="timer hide"></div>
+    </div>
+    <div id="timerPanel" class="timecard hide">
+      <div>
+        <div class="tl">เวลาที่เหลือ</div>
+        <div class="muted" style="font-size:12.5px">ระบบจะส่งข้อสอบอัตโนมัติเมื่อหมดเวลา</div>
+      </div>
+      <div id="timerBig" class="tv">0:00</div>
+    </div>
+    <div class="card">
+      <div class="qnum" id="qnum"></div>
+      <div class="qmeta" id="qmeta"></div>
+      <div id="imgLoading" class="img-loading hide"><div class="spin"></div>กำลังโหลดรูปข้อสอบ...</div>
+      <img id="qimg" class="qimg hide" alt="รูปประกอบ">
+      <div class="qtext" id="qtext"></div>
+      <div id="opts"></div>
+      <div id="qexplain" class="explain hide"></div>
+      <div class="btn-row" style="margin-top:16px">
+        <button id="btnPrev" class="btn ghost" onclick="prevQ()">‹ ย้อนกลับ</button>
+        <button id="btnNext" class="btn" onclick="nextQ()">ข้อถัดไป ›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ผลสอบ ===== -->
+  <div id="s-result" class="hide">
+    <div class="card scorewrap">
+      <div class="ring" id="ring"><div class="in"><b id="pct">0%</b><span>คะแนน</span></div></div>
+      <div class="res-sub" id="resSub"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin:0 0 4px">เฉลยและทบทวน</h2>
+      <div id="review"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" onclick="goHome()">🏠 หน้าแรก</button>
+      <button class="btn" onclick="showHistory()">📊 ดูสถิติ</button>
+    </div>
+  </div>
+
+  <!-- ===== สถิติ ===== -->
+  <div id="s-history" class="hide">
+    <div class="card">
+      <h2 style="margin:0 0 12px">📊 สถิติย้อนหลัง</h2>
+      <div id="histStudentBox" class="hist-filter hide">
+        <label for="histStudentSelect">เลือกผู้ทำ</label>
+        <select id="histStudentSelect" onchange="setScope(this.value)"></select>
+      </div>
+      <div id="weakBox" class="hide" style="margin-bottom:16px"></div>
+      <div id="histChart" class="hide" style="margin-bottom:16px"></div>
+      <div id="histBody" class="loading"><div class="spin"></div>กำลังโหลด...</div>
+    </div>
+    <button class="btn ghost" onclick="goHome()">กลับหน้าแรก</button>
+  </div>
+
+</div>
+
+<script>
+  var INIT=null, EXAM=null, idx=0, answers=[], locked=[];
+  var startMs=0, timerId=null, remain=0, imgCache={};
+  var sel={ level:'', subject:'ทั้งหมด', count:10, minutes:0, difficulty:'ทั้งหมด', showAnswer:true, cooldownHours:48, shuffleQ:true, shuffleOpt:true };
+  var EMO={'คณิตศาสตร์':'➗','วิทยาศาสตร์':'🔬','ภาษาอังกฤษ':'🔤','ภาษาไทย':'📖','สังคมศึกษา':'🌏'};
+
+  // ---- เริ่มต้น ----
+  if(typeof google==='undefined' || !google.script || !google.script.run){
+    showErr('ต้องเปิดผ่านลิงก์ Web App ของ Google Apps Script เท่านั้น');
+  } else {
+    google.script.run.withSuccessHandler(onInit).withFailureHandler(function(e){
+      showErr((e&&e.message)?e.message:'โหลดข้อมูลไม่สำเร็จ');
+    }).getInitData();
+  }
+
+  function onInit(data){
+    if(!data){ showErr('ไม่ได้รับข้อมูลจากเซิร์ฟเวอร์'); return; }
+    INIT=data;
+    if(data.studentName || data.email){
+      document.getElementById('email').textContent = data.studentName || data.email;
+      document.getElementById('userchip').classList.remove('hide');
+    }
+    var d=data.defaults||{};
+    if(d.showAnswer===false){ sel.showAnswer=false; document.getElementById('tog').classList.remove('on'); }
+    sel.level = (data.levels&&data.levels[0]) || 'ม.1';
+    renderHome();
+    show('s-home');
+  }
+
+  // ---- หน้าแรก ----
+  function renderHome(){
+    var seg=document.getElementById('levelSeg'); seg.innerHTML='';
+    ((INIT.levels||['ม.1','ม.4']).concat(['ข้อสอบจริง'])).forEach(function(lv){
+      var b=document.createElement('button');
+      b.textContent=lv; b.className=(lv===sel.level?'on':'');
+      b.onclick=function(){ sel.level=lv; sel.subject='ทั้งหมด'; renderHome(); };
+      seg.appendChild(b);
+    });
+    var realMode=sel.level==='ข้อสอบจริง';
+    ['subjectSec','timeSec','diffSec','cooldownSec'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.classList.toggle('hide', realMode);
+    });
+    document.getElementById('countSec').classList.remove('hide');
+    document.getElementById('answerSec').classList.remove('hide');
+    var sq = document.getElementById('shuffleQSec'); if(sq) sq.classList.add('hide');
+    var so = document.getElementById('shuffleOptSec'); if(so) so.classList.add('hide');
+    document.getElementById('realPickSec').classList.toggle('hide', !realMode);
+    document.getElementById('startBtn').textContent=realMode?'เริ่มทำข้อสอบชุดจริง':'เริ่มทำข้อสอบ';
+
+    if(realMode){
+      renderRealSets();
+      updateRealCountChips();
+      return;
+    }
+
+    var subs=(INIT.byLevel&&INIT.byLevel[sel.level])||{};
+    var total=Object.keys(subs).reduce(function(a,k){return a+subs[k];},0);
+    var grid=document.getElementById('subjGrid'); grid.innerHTML='';
+    grid.appendChild(subjCard('ทั้งหมด','🎲','ทุกวิชา',total));
+    Object.keys(subs).forEach(function(name){
+      grid.appendChild(subjCard(name, EMO[name]||'📘', name, subs[name]));
+    });
+
+    chipSet('countChips',[5,10,20,30].map(function(n){return {v:n,t:n+' ข้อ'};}),
+      sel.count, function(v){ sel.count=v; });
+
+    chipSet('timeChips',[{v:0,t:'ไม่จับเวลา'},{v:10,t:'10 นาที'},{v:20,t:'20 นาที'},{v:30,t:'30 นาที'}],
+      sel.minutes, function(v){ sel.minutes=v; });
+
+    chipSet('diffChips',['ทั้งหมด','ง่าย','กลาง','ยาก'].map(function(x){return {v:x,t:x};}),
+      sel.difficulty, function(v){ sel.difficulty=v; });
+  }
+
+  function subjCard(val,emo,nm,ct){
+    var d=document.createElement('button');
+    d.className='subj'+(sel.subject===val?' on':'');
+    d.innerHTML='<div class="emo">'+emo+'</div><div class="nm">'+esc(nm)+'</div><div class="ct">'+ct+' ข้อ</div>';
+    d.onclick=function(){ sel.subject=val; renderHome(); };
+    return d;
+  }
+  function chipSet(id,items,cur,cb){
+    var box=document.getElementById(id); box.innerHTML='';
+    items.forEach(function(it){
+      var b=document.createElement('button');
+      b.className='chip'+(it.v===cur?' on':''); b.textContent=it.t;
+      b.onclick=function(){ cb(it.v); renderHome(); };
+      box.appendChild(b);
+    });
+  }
+  function toggleMode(){
+    sel.showAnswer=!sel.showAnswer;
+    document.getElementById('tog').classList.toggle('on',sel.showAnswer);
+  }
+  function toggleCooldown(){
+    sel.cooldownHours = (sel.cooldownHours > 0 ? 0 : 48);
+    document.getElementById('togCooldown').classList.toggle('on', sel.cooldownHours > 0);
+  }
+  function toggleShuffleQ(){
+    sel.shuffleQ = !sel.shuffleQ;
+    document.getElementById('togShuffleQ').classList.toggle('on', sel.shuffleQ);
+  }
+  function toggleShuffleOpt(){
+    sel.shuffleOpt = !sel.shuffleOpt;
+    document.getElementById('togShuffleOpt').classList.toggle('on', sel.shuffleOpt);
+  }
+
+  function renderRealSets(){
+    var select=document.getElementById('realSetSelect'), btn=document.getElementById('startBtn');
+    var sets=(INIT&&INIT.realSets)||[];
+    if(!sets.length){
+      select.innerHTML='<option value="">ยังไม่มีชุดข้อสอบจริง</option>';
+      btn.disabled=true;
+      return;
+    }
+    var prevVal = select.value;
+    select.innerHTML=sets.map(function(s){
+      return '<option value="'+escAttr(s.id)+'">'+esc(s.name)+' · '+s.total+' ข้อ · '+s.minutes+' นาที</option>';
+    }).join('');
+    if(prevVal) select.value = prevVal;
+    select.onchange = function(){ updateRealCountChips(); };
+    btn.disabled=false;
+  }
+
+  function updateRealCountChips(){
+    var select=document.getElementById('realSetSelect');
+    var sets=(INIT&&INIT.realSets)||[];
+    var selectedId = select ? select.value : '';
+    var set = sets.filter(function(s){ return s.id === selectedId; })[0] || (sets.length ? sets[0] : null);
+    
+    var total = (set && set.total) ? Number(set.total) : 100;
+    var totalMin = (set && set.minutes) ? Number(set.minutes) : 180;
+    
+    var items = [];
+    if(total === 60){
+      items = [
+        { v: 30, t: '🎲 สุ่ม 30 ข้อ (' + Math.round(30/60 * totalMin) + ' นาที)' },
+        { v: 60, t: '📝 เต็มชุด 60 ข้อ (' + totalMin + ' นาที)' }
+      ];
+    } else if(total === 100){
+      items = [
+        { v: 30, t: '🎲 สุ่ม 30 ข้อ (' + Math.round(30/100 * totalMin) + ' นาที)' },
+        { v: 50, t: '🎲 สุ่ม 50 ข้อ (' + Math.round(50/100 * totalMin) + ' นาที)' },
+        { v: 100, t: '📝 เต็มชุด 100 ข้อ (' + totalMin + ' นาที)' }
+      ];
+    } else if(total <= 30){
+      items = [
+        { v: total, t: '📝 เต็มชุด ' + total + ' ข้อ (' + totalMin + ' นาที)' }
+      ];
+    } else {
+      items = [
+        { v: 30, t: '🎲 สุ่ม 30 ข้อ (' + Math.round(30/total * totalMin) + ' นาที)' },
+        { v: total, t: '📝 เต็มชุด ' + total + ' ข้อ (' + totalMin + ' นาที)' }
+      ];
+    }
+    
+    // Check if current sel.realCount matches available options
+    var validVals = items.map(function(it){ return it.v; });
+    if(validVals.indexOf(sel.realCount) < 0){
+      sel.realCount = validVals[validVals.length - 1]; // Default to full set if invalid
+    }
+    
+    chipSet('countChips', items, sel.realCount, function(v){ sel.realCount=v; renderHome(); });
+  }
+
+  function startSelectedExam(){
+    if(sel.level==='ข้อสอบจริง') startRealExam();
+    else startExam();
+  }
+
+  function startRealExam(){
+    var select=document.getElementById('realSetSelect'), btn=document.getElementById('startBtn');
+    if(!select.value){ alert('ยังไม่มีชุดข้อสอบจริงให้เลือก'); return; }
+    btn.disabled=true; btn.textContent='กำลังโหลดชุดข้อสอบ...';
+    var count = sel.realCount || 30;
+    var showAnswer = sel.showAnswer;
+    var shuffleQ = sel.shuffleQ !== false;
+    var shuffleOpt = sel.shuffleOpt !== false;
+    google.script.run.withSuccessHandler(function(raw){
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบชุดจริง';
+      onExam(parseServer(raw));
+    }).withFailureHandler(function(e){
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบชุดจริง';
+      alert('โหลดชุดข้อสอบไม่สำเร็จ: '+((e&&e.message)?e.message:e));
+    }).buildRealExam(select.value, count, showAnswer, shuffleQ, shuffleOpt);
+  }
+
+  // ---- เริ่มทำ ----
+  function startExam(){
+    var btn=document.getElementById('startBtn');
+    btn.disabled=true; btn.textContent='กำลังโหลดข้อสอบ...';
+    var opts={
+      level:sel.level, subject:sel.subject, count:sel.count, minutes:sel.minutes,
+      difficulty:sel.difficulty, showAnswer:sel.showAnswer,
+      cooldownHours: sel.cooldownHours,
+      mode: sel.showAnswer?'ฝึกรายชุด':'สอบเสมือนจริง',
+      student: INIT.studentName || INIT.email || ''
+    };
+    google.script.run.withSuccessHandler(function(raw){
+      onExam(parseServer(raw));
+    }).withFailureHandler(function(e){
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบ';
+      alert('โหลดข้อสอบไม่สำเร็จ: '+((e&&e.message)?e.message:e));
+    }).buildExam(opts);
+  }
+
+  function parseServer(raw){
+    if(raw==null) return null;
+    if(typeof raw==='string'){ try{ return JSON.parse(raw); }catch(e){ return null; } }
+    return raw;
+  }
+
+  function onExam(data){
+    var btn=document.getElementById('startBtn');
+    if(!data){
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบ';
+      alert('เซิร์ฟเวอร์คืนค่าว่าง (null)'); return;
+    }
+    if(data.error){
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบ';
+      alert('ข้อความจากระบบ: '+data.error); return;
+    }
+    if(!data.items || !data.items.length){
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบ';
+      alert('สร้างได้ 0 ข้อ · ระดับ '+data.settings.level+' · วิชา '+data.settings.subject+' · ความยาก '+data.settings.difficulty); return;
+    }
+    btn.disabled=false; btn.textContent='เริ่มทำข้อสอบ';
+    EXAM=data; idx=0;
+    answers=new Array(data.items.length).fill(null);
+    locked=new Array(data.items.length).fill(false);
+    startMs=Date.now();
+    if(timerId) clearInterval(timerId);
+    show('s-exam');
+    var tEl=document.getElementById('timer'), panel=document.getElementById('timerPanel');
+    if(data.settings.minutes>0){
+      remain=data.settings.minutes*60; tEl.classList.remove('hide'); panel.classList.remove('hide'); tick();
+      timerId=setInterval(tick,1000);
+    } else { tEl.classList.add('hide'); panel.classList.add('hide'); }
+    renderQ();
+    prefetchImages();
+  }
+
+  function tick(){
+    var m=Math.floor(remain/60), s=remain%60, el=document.getElementById('timer');
+    var txt=m+':'+(s<10?'0':'')+s;
+    el.textContent='⏱ '+txt;
+    el.className='timer'+(remain<=30?' low':'');
+    document.getElementById('timerBig').textContent=txt;
+    document.getElementById('timerPanel').className='timecard'+(remain<=30?' low':'');
+    if(remain<=0){ clearInterval(timerId); submitExam(); return; }
+    remain--;
+  }
+
+  function startWeakExam(){
+    var btn=document.getElementById('startBtn');
+    btn.disabled=true;
+    google.script.run.withSuccessHandler(function(raw){
+      btn.disabled=false;
+      onExam(parseServer(raw));
+    }).withFailureHandler(function(e){
+      btn.disabled=false;
+      alert('โหลดไม่สำเร็จ: '+((e&&e.message)?e.message:e));
+    }).buildWeakExam({
+      student: INIT.email||'', level: sel.level, subject: sel.subject,
+      count: sel.count, minutes: sel.minutes, showAnswer: sel.showAnswer
+    });
+  }
+
+  // ---- แสดงข้อ ----
+  function renderQ(){
+    var q=EXAM.items[idx];
+    document.getElementById('qnum').textContent='ข้อ '+(idx+1)+' จาก '+EXAM.total;
+    document.getElementById('progbar').style.width=(idx/EXAM.total*100)+'%';
+    var dc=q.difficulty==='ยาก'?'hard':(q.difficulty==='กลาง'?'mid':'easy');
+    document.getElementById('qmeta').innerHTML=
+      '<span class="tag">'+esc(q.subject)+'</span>'+
+      '<span class="tag">'+esc(q.level)+'</span>'+
+      '<span class="tag">'+esc(q.topic)+'</span>'+
+      '<span class="tag '+dc+'">'+esc(q.difficulty)+'</span>';
+
+    var img=document.getElementById('qimg');
+    var loading=document.getElementById('imgLoading');
+    img.className='qimg hide'+(EXAM.settings.mode==='ข้อสอบชุดจริง'?' real':''); img.removeAttribute('src');
+    loading.classList.add('hide');
+    
+    var qtextEl = document.getElementById('qtext');
+    qtextEl.innerHTML = formatHtml(q.question);
+
+    var inlineImgs = qtextEl.querySelectorAll('.inline-qimg');
+    if(inlineImgs && inlineImgs.length > 0){
+      img.classList.add('hide');
+      inlineImgs.forEach(function(el){
+        var fn = el.getAttribute('data-img-fn');
+        if(fn) loadImg(fn, el);
+      });
+    } else if(q.image) {
+      loadImg(q.image, img);
+    }
+
+    var reveal=EXAM.settings.showAnswer && locked[idx];
+    var html='';
+    q.options.forEach(function(o, oIdx){
+      var cls='opt';
+      if(reveal){
+        if(o.label===q.answer) cls+=' correct';
+        else if(o.label===answers[idx]) cls+=' wrong';
+      } else if(answers[idx]===o.label){ cls+=' sel'; }
+
+      var textTrim = (o.text || '').trim();
+      var cleanFn = textTrim.replace(/^\[|\]$/g, '').trim();
+      var isImgOpt = cleanFn && (
+        /\.(png|jpg|jpeg|svg|webp)$/i.test(cleanFn) ||
+        /^img_/i.test(cleanFn) ||
+        /^POSN_/i.test(cleanFn)
+      );
+      var bodyHtml = '';
+      if (isImgOpt) {
+        var imgId = 'opt_img_' + idx + '_' + oIdx;
+        bodyHtml = '<img id="' + imgId + '" class="choice-img-inline hide" style="max-height:130px; max-width:100%; border-radius:6px; margin:4px 0; border:1px solid #cbd5e1;">';
+        setTimeout(function() {
+          var imgEl = document.getElementById(imgId);
+          if (imgEl) loadChoiceImg(cleanFn, imgEl);
+        }, 50);
+      } else {
+        bodyHtml = formatHtml(textTrim || ('ตัวเลือก ' + o.label));
+      }
+
+      html += '<button class="' + cls + '" ' + (reveal ? 'disabled' : '') + ' onclick="choose(\'' + o.label + '\')">' +
+              '<span class="lab">' + o.label + '</span><span class="tx">' + bodyHtml + '</span></button>';
+    });
+    document.getElementById('opts').innerHTML=html;
+
+    var ex=document.getElementById('qexplain');
+    if(reveal && q.explain){ ex.innerHTML='<b>เฉลย '+q.answer+'</b> — '+formatHtml(q.explain); ex.classList.remove('hide'); }
+    else ex.classList.add('hide');
+
+    document.getElementById('btnPrev').style.visibility=(idx===0?'hidden':'visible');
+    document.getElementById('btnNext').textContent=(idx===EXAM.total-1)?'ส่งข้อสอบ ✓':'ข้อถัดไป ›';
+  }
+
+  function prefetchImages(){
+    if(!EXAM || !EXAM.items) return;
+    var isReal=EXAM.settings.mode==='ข้อสอบชุดจริง';
+    var list=EXAM.items.filter(function(q){return q.image;});
+    var i=0;
+    (function next(){
+      if(i>=list.length) return;
+      var fn=list[i++].image, key=(isReal?'real:':'gen:')+fn;
+      if(imgCache[key]!==undefined){ next(); return; }
+      google.script.run.withSuccessHandler(function(uri){
+        imgCache[key]=uri||'';
+        var el=document.getElementById('qimg');
+        if(el && EXAM.items[idx] && EXAM.items[idx].image===fn && uri){
+          el.src=uri; el.classList.remove('hide');
+          var ld=document.getElementById('imgLoading'); if(ld) ld.classList.add('hide');
+        }
+        next();
+      }).withFailureHandler(function(error){ 
+          imgCache[key]=''; 
+          next(); 
+        })
+    })();
+  }
+
+  
+  function loadChoiceImg(fn, el) {
+    if (!fn || !el) return;
+    fn = fn.replace(/^\[|\]$/g, '').trim();
+    var isReal = EXAM && EXAM.settings && EXAM.settings.mode === 'ข้อสอบชุดจริง';
+    var key = (isReal ? 'real:' : 'gen:') + fn;
+    if (imgCache[key] !== undefined) {
+      if (imgCache[key]) { el.src = imgCache[key]; el.classList.remove('hide'); }
+      return;
+    }
+    google.script.run.withSuccessHandler(function(uri) {
+      imgCache[key] = uri || '';
+      if (uri) { el.src = uri; el.classList.remove('hide'); }
+    }).withFailureHandler(function() {
+      imgCache[key] = '';
+    })[isReal ? 'getRealImage' : 'getImage'](fn);
+  }
+
+  function loadImg(fn,el){
+    var isReal=EXAM && EXAM.settings && EXAM.settings.mode==='ข้อสอบชุดจริง';
+    var key=(isReal?'real:':'gen:')+fn;
+    var loading=document.getElementById('imgLoading');
+    if(imgCache[key]!==undefined){
+      loading.classList.add('hide');
+      if(imgCache[key]){el.src=imgCache[key];el.classList.remove('hide');}
+      return;
+    }
+    loading.classList.remove('hide');
+    google.script.run.withSuccessHandler(function(uri){
+      imgCache[key]=uri||'';
+      if(EXAM.items[idx] && EXAM.items[idx].image===fn){
+        loading.classList.add('hide');
+        if(uri){ el.src=uri; el.classList.remove('hide'); }
+      }
+    }).withFailureHandler(function(){
+      imgCache[key]='';
+      if(EXAM.items[idx] && EXAM.items[idx].image===fn){
+        loading.classList.add('hide');
+      }
+    })[isReal?'getRealImage':'getImage'](fn);
+  }
+
+  function choose(label){
+    if(EXAM.settings.showAnswer && locked[idx]) return;
+    answers[idx]=label;
+    if(EXAM.settings.showAnswer) locked[idx]=true;
+    renderQ();
+  }
+  function prevQ(){ if(idx>0){ idx--; renderQ(); window.scrollTo(0,0);} }
+  function nextQ(){ if(idx<EXAM.total-1){ idx++; renderQ(); window.scrollTo(0,0);} else submitExam(); }
+
+  // ---- ส่ง + ตรวจ ----
+  function submitExam(){
+    if(timerId) clearInterval(timerId);
+    document.getElementById('timerPanel').classList.add('hide');
+    var correct=0, wrong=[], served=[];
+    EXAM.items.forEach(function(q,i){
+      served.push(q.id);
+      if(q.answer && answers[i]===q.answer) correct++;
+      else wrong.push(q.id);
+    });
+    var total=EXAM.total, score=Math.round(correct/total*100);
+    var used=Math.max(1,Math.round((Date.now()-startMs)/60000));
+    var s=EXAM.settings;
+    pendingSave=true; saveDone=false; LAST_SAVED=null;
+    google.script.run
+      .withSuccessHandler(function(saved){ saveDone=true; if(saved && saved.datetime) LAST_SAVED=saved; })
+      .withFailureHandler(function(e){ saveDone=true; console.warn('บันทึกสถิติไม่สำเร็จ:', e); })
+      .saveResult({
+        student:s.student, mode:s.mode, level:s.level, subject:s.subject,
+        difficulty:(s.mode==='ข้อสอบชุดจริง' ? s.set : s.difficulty),
+        total:total, correct:correct, score:score, minutesUsed:used,
+        servedIds:served, wrongIds:wrong
+      });
+    renderResult(correct,total,score);
+  }
+
+  // ---- ขอวิธีคิดละเอียดจาก AI (เฉพาะข้อที่ผิด) ----
+  var _moreCache={};
+  function explainMore(i){
+    var q=EXAM.items[i], box=document.getElementById('more'+i);
+    if(!box) return;
+    if(box.classList.contains('show')){ box.classList.remove('show'); return; }
+    if(_moreCache[i]!==undefined){ box.textContent=_moreCache[i]; box.classList.add('show'); return; }
+    box.textContent='กำลังคิดวิธีอธิบาย...'; box.classList.add('show');
+    var opts=q.options.map(function(o){return o.label+'. '+o.text;}).join('  ');
+    google.script.run.withSuccessHandler(function(txt){
+      var t=(txt&&String(txt).trim())?String(txt):('เฉลยข้อนี้คือ '+q.answer+'\n'+(q.explain||''));
+      _moreCache[i]=t; box.textContent=t;
+    }).withFailureHandler(function(){
+      var t='เฉลยข้อนี้คือ '+q.answer+(q.explain?('\n'+q.explain):'')+'\n\n(ยังไม่ได้เปิดใช้ตัวช่วยอธิบายด้วย AI)';
+      _moreCache[i]=t; box.textContent=t;
+    }).explainQuestion(q.question, opts, q.answer, q.explain||'', q.subject||'', q.level||'');
+  }
+
+  function renderResult(correct,total,score){
+    document.getElementById('ring').style.setProperty('--pct',score+'%');
+    document.getElementById('pct').textContent=score+'%';
+    document.getElementById('resSub').textContent='ทำถูก '+correct+' จาก '+total+' ข้อ';
+    if(EXAM.settings && EXAM.settings.answerKeyReady===false){
+      document.getElementById('resSub').textContent='บันทึกคำตอบแล้ว · ชุดนี้ยังไม่ได้เติมเฉลยครบในชีต จึงยังไม่คิดคะแนนจริง';
+    }
+    var html='';
+    EXAM.items.forEach(function(q,i){
+      var picked=answers[i], right=(picked===q.answer);
+      html+='<div class="review-q">';
+      html+='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'+
+            '<span class="muted" style="font-size:13.5px">ข้อ '+(i+1)+' · '+esc(q.subject)+' · '+esc(q.topic)+'</span>'+
+            '<span class="tag '+(right?'easy':'hard')+'">'+(right?'✓ ถูก':'✗ ผิด')+'</span></div>';
+      html+='<div class="qtext" style="font-size:16px;margin:8px 0">'+formatHtml(q.question)+'</div>';
+      var isReal=(EXAM.settings.mode==='ข้อสอบชุดจริง');
+      var ik=(isReal?'real:':'gen:')+q.image;
+      if(q.image && imgCache[ik]) html+='<img class="qimg'+(isReal?' real':'')+'" src="'+imgCache[ik]+'">';
+      q.options.forEach(function(o, oIdx){
+        var cls='opt';
+        if(o.label===q.answer) cls+=' correct'; else if(o.label===picked) cls+=' wrong';
+        var textTrim = (o.text || '').trim();
+        var cleanFn = textTrim.replace(/^\[|\]$/g, '').trim();
+        var isImgOpt = cleanFn && (
+          /\.(png|jpg|jpeg|svg|webp)$/i.test(cleanFn) ||
+          /^img_/i.test(cleanFn) ||
+          /^POSN_/i.test(cleanFn)
+        );
+        var bodyHtml = '';
+        if (isImgOpt) {
+          var revImgId = 'rev_opt_img_' + i + '_' + oIdx;
+          bodyHtml = '<img id="' + revImgId + '" class="choice-img-inline hide" style="max-height:130px; max-width:100%; border-radius:6px; margin:4px 0; border:1px solid #cbd5e1;">';
+          setTimeout(function() {
+            var imgEl = document.getElementById(revImgId);
+            if (imgEl) loadChoiceImg(cleanFn, imgEl);
+          }, 50);
+        } else {
+          bodyHtml = formatHtml(textTrim || ('ตัวเลือก ' + o.label));
+        }
+        html+='<div class="'+cls+'" style="cursor:default"><span class="lab">'+o.label+
+              '</span><span class="tx">'+bodyHtml+'</span></div>';
+      });
+      if(!picked) html+='<div class="muted" style="color:var(--bad);font-size:13.5px;margin:4px 0">(ไม่ได้ตอบ)</div>';
+      if(q.answer) html+='<div class="explain"><b>เฉลย '+q.answer+'</b>'+(q.explain?' — '+formatHtml(q.explain):'')+'</div>';
+      if(!right){
+        html+='<div id="more'+i+'" class="moreExp"></div>';
+        html+='<button class="btn ghost small" onclick="explainMore('+i+')">💡 ขอวิธีคิดแบบละเอียด</button>';
+      }
+      html+='</div>';
+    });
+    document.getElementById('review').innerHTML=html;
+    show('s-result'); window.scrollTo(0,0);
+  }
+
+  // ---- สถิติ ----
+  function showHistory(){
+    show('s-history');
+    histScope='all';
+    var hb=document.getElementById('histBody');
+    hb.className='loading'; hb.innerHTML='<div class="spin"></div>กำลังโหลด...';
+    var fetch=function(){
+      var who=(INIT&&INIT.email)||'';
+      google.script.run.withSuccessHandler(renderHistory).withFailureHandler(function(){
+        hb.className=''; hb.innerHTML='<div class="muted">โหลดสถิติไม่สำเร็จ</div>';
+      }).getHistory(who,200);
+    };
+    if(pendingSave && !saveDone){
+      var n=0, iv=setInterval(function(){
+        if(saveDone || n>30){ clearInterval(iv); pendingSave=false; fetch(); }
+        n++;
+      },100);
+    } else { pendingSave=false; fetch(); }
+  }
+  var HIST=[], histScope='all';
+  var pendingSave=false, saveDone=false, LAST_SAVED=null;
+  function attKey(r){ return [String(r.student||'').toLowerCase(),r.subject,r.total,r.correct,r.score].join('|'); }
+  function renderHistory(rows){
+    HIST=rows||[];
+    if(LAST_SAVED){
+      var kk=attKey(LAST_SAVED);
+      if(!HIST.some(function(r){ return attKey(r)===kk; })) HIST.unshift(LAST_SAVED);
+    }
+    setupHistoryFilters();
+    drawHist();
+  }
+  function setupHistoryFilters(){
+    var box=document.getElementById('histStudentBox'), sel=document.getElementById('histStudentSelect');
+    var seen={}, names=[];
+    HIST.forEach(function(r){
+      var name=String(r.student||'').trim();
+      if(name && !seen[name.toLowerCase()]){ seen[name.toLowerCase()]=true; names.push(name); }
+    });
+    names.sort();
+    sel.innerHTML='<option value="all">ทุกคน</option>'+
+      names.map(function(n){ return '<option value="student:'+escAttr(n)+'">'+esc(n)+'</option>'; }).join('');
+    sel.value=histScope;
+    box.classList.remove('hide');
+  }
+  function setScope(s){
+    histScope=s;
+    var sel=document.getElementById('histStudentSelect');
+    if(sel && Array.prototype.some.call(sel.options,function(o){ return o.value===s; })) sel.value=s;
+    drawHist();
+  }
+  function drawHist(){
+    var b=document.getElementById('histBody'); b.className='';
+    var me=((INIT&&INIT.email)||'').trim().toLowerCase();
+    var rows=HIST;
+    if(histScope==='mine' && me){
+      rows=HIST.filter(function(r){ return String(r.student||'').trim().toLowerCase()===me; });
+    } else if(histScope.indexOf('student:')===0){
+      var who=histScope.slice(8).toLowerCase();
+      rows=HIST.filter(function(r){ return String(r.student||'').trim().toLowerCase()===who; });
+    }
+    if(!rows.length){
+      document.getElementById('histChart').classList.add('hide');
+      b.innerHTML='<div class="muted center">ยังไม่มีประวัติในตัวกรองนี้</div>';
+      return;
+    }
+    drawChart(rows.slice().reverse());
+    loadWeakTopics();
+    var h='<div style="overflow-x:auto"><table class="hist"><tr><th>วันเวลา</th><th>ผู้ทำ</th><th>ระดับ</th>'+
+          '<th>วิชา</th><th>ความยาก</th><th>ข้อ</th><th>คะแนน</th></tr>';
+    rows.forEach(function(r){
+      var col=r.score>=80?'var(--ok)':(r.score>=50?'var(--mid)':'var(--bad)');
+      h+='<tr><td>'+esc(r.datetime)+'</td>'+
+         '<td style="font-size:12px;word-break:break-all">'+esc(r.student||'-')+'</td>'+
+         '<td>'+esc(r.level||'-')+'</td>'+
+         '<td>'+esc(r.subject)+'</td><td>'+esc(r.difficulty||'-')+'</td>'+
+         '<td>'+r.correct+'/'+r.total+'</td>'+
+         '<td class="hbadge" style="color:'+col+'">'+r.score+'%</td></tr>';
+    });
+    b.innerHTML=h+'</table></div>';
+  }
+
+  function currentScopeEmail(){
+    if(histScope.indexOf('student:')===0) return histScope.slice(8);
+    if(histScope==='mine') return (INIT&&INIT.email)||'';
+    return (INIT&&INIT.email)||'';
+  }
+  function loadWeakTopics(){
+    var box=document.getElementById('weakBox');
+    box.classList.remove('hide');
+    box.innerHTML='<div class="weakwrap"><h3>🎯 บทที่ควรทบทวน</h3><div class="weakempty">กำลังวิเคราะห์...</div></div>';
+    var who=currentScopeEmail();
+    google.script.run.withSuccessHandler(function(raw){
+      var list=null; try{ list=(typeof raw==='string')?JSON.parse(raw):raw; }catch(e){}
+      renderWeak(list||[]);
+    }).withFailureHandler(function(){ renderWeak([]); }).getWeakTopics(who,6);
+  }
+  function renderWeak(list){
+    var box=document.getElementById('weakBox');
+    if(!list||!list.length){
+      box.innerHTML='<div class="weakwrap"><h3>🎯 บทที่ควรทบทวน</h3>'+
+        '<div class="weakempty">ยังไม่มีข้อที่ตอบผิด หรือทำถูกหมดทุกข้อ เก่งมาก! 🎉</div></div>';
+      return;
+    }
+    var max=list[0].wrong||1;
+    var rows=list.map(function(w){
+      var pct=Math.max(8,Math.round((w.wrong/max)*100));
+      return '<div class="weakrow"><span class="name">'+esc(w.topic)+'</span>'+
+             '<span class="weakbar" style="width:'+pct+'px"></span>'+
+             '<span class="cnt">ผิด '+w.wrong+' ครั้ง</span></div>';
+    }).join('');
+    box.innerHTML='<div class="weakwrap"><h3>🎯 บทที่ควรทบทวน (เรียงจากผิดบ่อยสุด)</h3>'+rows+
+      '<div class="weakempty" style="margin-top:8px">💡 กดปุ่ม “ซ่อมจุดอ่อน” ที่หน้าแรกเพื่อฝึกเฉพาะข้อพวกนี้</div></div>';
+  }
+
+  function drawChart(rows){
+    var el=document.getElementById('histChart');
+    if(!rows || !rows.length){ el.classList.add('hide'); el.innerHTML=''; return; }
+    el.classList.remove('hide');
+    var totalPts=rows.length;
+
+    var SUBJ_COLOR={
+      'คณิตศาสตร์':'#4d8f7f','วิทยาศาสตร์':'#3f74c0','ภาษาอังกฤษ':'#c08a3e',
+      'ภาษาไทย':'#b5654d','สังคมศึกษา':'#6b8f3d','ทุกวิชา':'#7a7f88','ทั้งหมด':'#7a7f88'
+    };
+    var PALETTE=['#4d8f7f','#3f74c0','#c08a3e','#b5654d','#6b8f3d','#8a6fb0','#3fa0a0'];
+
+    var groups={}, order=[];
+    rows.forEach(function(r){
+      var s=r.subject||'-';
+      if(!groups[s]){ groups[s]=[]; order.push(s); }
+      groups[s].push(r.score);
+    });
+    var maxK=1; order.forEach(function(s){ if(groups[s].length>maxK) maxK=groups[s].length; });
+
+    var W=600,H=232, L=38,R=14,T=16,B=34;
+    var x0=L,x1=W-R,y0=T,y1=H-B;
+    function xf(i){ return maxK===1 ? (x0+x1)/2 : x0 + i*(x1-x0)/(maxK-1); }
+    function yf(s){ return y1 - (Math.max(0,Math.min(100,s))/100)*(y1-y0); }
+
+    var g='';
+    [0,25,50,75,100].forEach(function(v){
+      var y=yf(v);
+      g+='<line x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'" stroke="#e1e7de" stroke-width="1"/>';
+      g+='<text x="'+(x0-6)+'" y="'+(y+4)+'" text-anchor="end" font-size="11" fill="#6b7771">'+v+'</text>';
+    });
+
+    var colorFor=function(s,idx){ return SUBJ_COLOR[s] || PALETTE[idx%PALETTE.length]; };
+    var lines='', dots='', legend='';
+    order.forEach(function(s,idx){
+      var arr=groups[s], c=colorFor(s,idx), path='';
+      arr.forEach(function(sc,i){ var x=xf(i),y=yf(sc); path+=(i===0?'M':'L')+x.toFixed(1)+','+y.toFixed(1)+' '; });
+      if(arr.length>1) lines+='<path d="'+path+'" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+      arr.forEach(function(sc,i){
+        var cx=xf(i), cy=yf(sc);
+        dots+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="4.2" fill="'+c+'"/>';
+        if(totalPts<=16) dots+='<text x="'+cx.toFixed(1)+'" y="'+(cy-8).toFixed(1)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+c+'">'+sc+'</text>';
+      });
+      legend+='<span style="display:inline-flex;align-items:center;gap:5px;margin:0 12px 5px 0;font-size:13px">'+
+              '<span style="width:11px;height:11px;border-radius:50%;background:'+c+';display:inline-block"></span>'+esc(s)+'</span>';
+    });
+
+    var avg=Math.round(rows.reduce(function(a,r){return a+r.score;},0)/rows.length);
+    var ay=yf(avg);
+    var avgLine='<line x1="'+x0+'" y1="'+ay+'" x2="'+x1+'" y2="'+ay+'" stroke="#556b60" stroke-width="1.6" stroke-dasharray="5,4"/>'+
+                '<text x="'+x1+'" y="'+(ay-5)+'" text-anchor="end" font-size="11" font-weight="700" fill="#556b60">เฉลี่ย '+avg+'%</text>';
+
+    var xlab='';
+    for(var i=0;i<maxK;i++){ xlab+='<text x="'+xf(i).toFixed(1)+'" y="'+(H-12)+'" text-anchor="middle" font-size="10" fill="#9aa39c">#'+(i+1)+'</text>'; }
+
+    var head='<div class="label" style="margin-bottom:8px"><span>📈 พัฒนาการคะแนนรายวิชา</span></div>';
+    var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;background:#fbfcfa;border:1px solid var(--line);border-radius:12px">'+
+            g+avgLine+lines+dots+xlab+'</svg>';
+    var leg='<div style="margin-top:10px">'+legend+
+            '<span style="display:inline-flex;align-items:center;gap:5px;margin:0 12px 5px 0;font-size:13px">'+
+            '<span style="width:14px;height:0;border-top:2px dashed #556b60;display:inline-block"></span>เฉลี่ยรวม</span></div>'+
+            '<div class="muted" style="font-size:11.5px;margin-top:2px">แกนนอน = ลำดับครั้งที่ทำของแต่ละวิชา</div>';
+    el.innerHTML=head+svg+leg;
+  }
+
+  function goHome(){
+    if(timerId) clearInterval(timerId);
+    EXAM=null; idx=0; answers=[]; locked=[];
+    var btn=document.getElementById('startBtn');
+    if(btn){ btn.disabled=false; btn.textContent='เริ่มทำข้อสอบ'; }
+    if(INIT){ renderHome(); show('s-home'); }
+    else { retryInit(); }
+    window.scrollTo(0,0);
+  }
+  function retryInit(){
+    if(INIT){ goHome(); return; }
+    show('s-loading');
+    google.script.run.withSuccessHandler(onInit).withFailureHandler(function(e){
+      showErr((e&&e.message)?e.message:'โหลดข้อมูลไม่สำเร็จ');
+    }).getInitData();
+  }
+  function show(id){
+    ['s-loading','s-error','s-home','s-exam','s-result','s-history'].forEach(function(x){
+      var el=document.getElementById(x); if(el) el.classList.add('hide');
+    });
+    var t=document.getElementById(id); if(t) t.classList.remove('hide');
+  }
+  function showErr(msg){ document.getElementById('err-msg').textContent=msg; show('s-error'); }
+  function esc(t){ return (t==null?'':String(t)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(t){ return esc(t).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function cleanSpecialSymbols(text) {
+    if (!text || typeof text !== 'string') return text || '';
+    var str = text;
+    str = str.replace(/\\n/g, '\n').replace(/\\r/g, '').replace(/\\t/g, ' ');
+    str = str.replace(/\\"/g, '"').replace(/\\'/g, "'");
+    str = str.replace(/®/g, '→').replace(/-->/g, '→').replace(/->/g, '→');
+    str = str.replace(/3\s*ป¬/g, '3 ปี')
+             .replace(/สิ้นป¬/g, 'สิ้นปี')
+             .replace(/ป¬ดิบชื้น/g, 'ป่าดิบชื้น')
+             .replace(/ป¬/g, 'ปี')
+             .replace(/จีโนไทป”/g, 'จีโนไทป์')
+             .replace(/ป”จจัย/g, 'ปัจจัย')
+             .replace(/ข"อ/g, 'ข้อ')
+             .replace(/เข0า/g, 'เข้า')
+             .replace(/ค4าย/g, 'ค่าย')
+             .replace(/ผู%ป-วย/g, 'ผู้ป่วย')
+             .replace(/ป-วย/g, 'ป่วย');
+    return str;
+  }
+
+  function renderMarkdownTable(text) {
+    if (!text || typeof text !== 'string') return '';
+    text = cleanSpecialSymbols(text);
+    if (text.indexOf('|') < 0) {
+      var rawLines = text.split('\n');
+      var cleanLines = [];
+      for (var j = 0; j < rawLines.length; j++) {
+        var l = rawLines[j].trim();
+        if (l !== '') cleanLines.push(l);
+      }
+      var res = '';
+      for (var m = 0; m < cleanLines.length; m++) {
+        if (m > 0) {
+          if (cleanLines[m-1].indexOf('<img') >= 0 || cleanLines[m].indexOf('<img') >= 0) {
+            res += '';
+          } else {
+            res += '<br>';
+          }
+        }
+        res += cleanLines[m];
+      }
+      return res;
+    }
+    var lines = text.split('\n');
+    var inTable = false;
+    var tableHtml = '<table class="markdown-table"><thead>';
+    var outputParts = [];
+    
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (line.indexOf('|') === 0 && line.lastIndexOf('|') === line.length - 1) {
+        if (!inTable) {
+          inTable = true;
+          var cols = line.split('|').filter(function(c){ return c.trim() !== ''; }).map(function(c){ return c.trim(); });
+          tableHtml += '<tr>' + cols.map(function(c){ return '<th>' + c + '</th>'; }).join('') + '</tr></thead><tbody>';
+        } else if (line.indexOf('---') >= 0) {
+          // separator line
+        } else {
+          var cols = line.split('|').filter(function(c){ return c.trim() !== ''; }).map(function(c){ return c.trim(); });
+          tableHtml += '<tr>' + cols.map(function(c){ return '<td>' + c + '</td>'; }).join('') + '</tr>';
+        }
+      } else {
+        if (inTable) {
+          inTable = false;
+          tableHtml += '</tbody></table>';
+          outputParts.push(tableHtml);
+          tableHtml = '<table class="markdown-table"><thead>';
+        }
+        if (line !== '') {
+          outputParts.push(line);
+        }
+      }
+    }
+    if (inTable) {
+      tableHtml += '</tbody></table>';
+      outputParts.push(tableHtml);
+    }
+    
+    var resultHtml = '';
+    for (var k = 0; k < outputParts.length; k++) {
+      var part = outputParts[k];
+      if (k > 0) {
+        var prev = outputParts[k-1];
+        if (prev.indexOf('<table') === 0 || part.indexOf('<table') === 0 ||
+            prev.indexOf('<img') >= 0 || part.indexOf('<img') >= 0) {
+          resultHtml += '';
+        } else {
+          resultHtml += '<br>';
+        }
+      }
+      resultHtml += part;
+    }
+    return resultHtml;
+  }
+
+  function formatHtml(t){
+    if(t == null) return '';
+    var str = cleanSpecialSymbols(String(t));
+    str = str.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+             .replace(/on\w+="[^"]*"/gi, '')
+             .replace(/javascript:/gi, '');
+             
+    // Convert [IMAGE: filename.png] to inline img tag
+    str = str.replace(/\[IMAGE:\s*([a-zA-Z0-9_\-]+\.png)\]/gi, function(m, fn){
+      return '<img class="qimg real inline-qimg" data-img-fn="' + fn + '" style="max-width:100%; border-radius:6px; border:1px solid #cbd5e1; margin:6px 0; display:block;">';
+    });
+    return renderMarkdownTable(str);
+  }
+</script>
+</body>
+</html>
