@@ -236,6 +236,7 @@
       <div id="realPickSec" class="sec hide">
         <div class="label">🗂 เลือกชุดข้อสอบจริง / Pretest</div>
         <select id="realSetSelect" class="selectbox"></select>
+        <div id="realFullNote" class="muted" style="font-size:13px;margin-top:8px">📝 ข้อสอบชุดจริงจะทำเต็มฉบับเสมอ (ไม่ต้องเลือกจำนวนข้อ) เพื่อให้เหมือนสอบจริงที่สุด</div>
       </div>
       <div id="subjectSec" class="sec">
         <div class="label">📚 เลือกวิชา</div>
@@ -401,16 +402,16 @@
       var el=document.getElementById(id);
       if(el) el.classList.toggle('hide', realMode);
     });
-    document.getElementById('countSec').classList.remove('hide');
+    // ข้อสอบชุดจริง: ทำเต็มฉบับเสมอ ไม่ต้องเลือกจำนวนข้อ
+    document.getElementById('countSec').classList.toggle('hide', realMode);
     document.getElementById('answerSec').classList.remove('hide');
     var sq = document.getElementById('shuffleQSec'); if(sq) sq.classList.add('hide');
     var so = document.getElementById('shuffleOptSec'); if(so) so.classList.add('hide');
     document.getElementById('realPickSec').classList.toggle('hide', !realMode);
-    document.getElementById('startBtn').textContent=realMode?'เริ่มทำข้อสอบชุดจริง':'เริ่มทำข้อสอบ';
+    document.getElementById('startBtn').textContent=realMode?'เริ่มทำข้อสอบชุดจริง (เต็มฉบับ)':'เริ่มทำข้อสอบ';
 
     if(realMode){
       renderRealSets();
-      updateRealCountChips();
       return;
     }
 
@@ -478,49 +479,7 @@
       return '<option value="'+escAttr(s.id)+'">'+esc(s.name)+' · '+s.total+' ข้อ · '+s.minutes+' นาที</option>';
     }).join('');
     if(prevVal) select.value = prevVal;
-    select.onchange = function(){ updateRealCountChips(); };
     btn.disabled=false;
-  }
-
-  function updateRealCountChips(){
-    var select=document.getElementById('realSetSelect');
-    var sets=(INIT&&INIT.realSets)||[];
-    var selectedId = select ? select.value : '';
-    var set = sets.filter(function(s){ return s.id === selectedId; })[0] || (sets.length ? sets[0] : null);
-    
-    var total = (set && set.total) ? Number(set.total) : 100;
-    var totalMin = (set && set.minutes) ? Number(set.minutes) : 180;
-    
-    var items = [];
-    if(total === 60){
-      items = [
-        { v: 30, t: '🎲 สุ่ม 30 ข้อ (' + Math.round(30/60 * totalMin) + ' นาที)' },
-        { v: 60, t: '📝 เต็มชุด 60 ข้อ (' + totalMin + ' นาที)' }
-      ];
-    } else if(total === 100){
-      items = [
-        { v: 30, t: '🎲 สุ่ม 30 ข้อ (' + Math.round(30/100 * totalMin) + ' นาที)' },
-        { v: 50, t: '🎲 สุ่ม 50 ข้อ (' + Math.round(50/100 * totalMin) + ' นาที)' },
-        { v: 100, t: '📝 เต็มชุด 100 ข้อ (' + totalMin + ' นาที)' }
-      ];
-    } else if(total <= 30){
-      items = [
-        { v: total, t: '📝 เต็มชุด ' + total + ' ข้อ (' + totalMin + ' นาที)' }
-      ];
-    } else {
-      items = [
-        { v: 30, t: '🎲 สุ่ม 30 ข้อ (' + Math.round(30/total * totalMin) + ' นาที)' },
-        { v: total, t: '📝 เต็มชุด ' + total + ' ข้อ (' + totalMin + ' นาที)' }
-      ];
-    }
-    
-    // Check if current sel.realCount matches available options
-    var validVals = items.map(function(it){ return it.v; });
-    if(validVals.indexOf(sel.realCount) < 0){
-      sel.realCount = validVals[validVals.length - 1]; // Default to full set if invalid
-    }
-    
-    chipSet('countChips', items, sel.realCount, function(v){ sel.realCount=v; renderHome(); });
   }
 
   function startSelectedExam(){
@@ -532,15 +491,16 @@
     var select=document.getElementById('realSetSelect'), btn=document.getElementById('startBtn');
     if(!select.value){ alert('ยังไม่มีชุดข้อสอบจริงให้เลือก'); return; }
     btn.disabled=true; btn.textContent='กำลังโหลดชุดข้อสอบ...';
-    var count = sel.realCount || 30;
+    // ข้อสอบชุดจริง/Pretest: ทำเต็มฉบับเสมอ ไม่มีการสุ่มบางส่วน (count=0 => เต็มฉบับ)
+    var count = 0;
     var showAnswer = sel.showAnswer;
     var shuffleQ = sel.shuffleQ !== false;
     var shuffleOpt = sel.shuffleOpt !== false;
     google.script.run.withSuccessHandler(function(raw){
-      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบชุดจริง';
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบชุดจริง (เต็มฉบับ)';
       onExam(parseServer(raw));
     }).withFailureHandler(function(e){
-      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบชุดจริง';
+      btn.disabled=false; btn.textContent='เริ่มทำข้อสอบชุดจริง (เต็มฉบับ)';
       alert('โหลดชุดข้อสอบไม่สำเร็จ: '+((e&&e.message)?e.message:e));
     }).buildRealExam(select.value, count, showAnswer, shuffleQ, shuffleOpt);
   }
